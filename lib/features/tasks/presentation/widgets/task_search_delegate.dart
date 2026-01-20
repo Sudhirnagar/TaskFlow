@@ -1,6 +1,6 @@
+// lib/features/tasks/presentation/widgets/task_search_delegate.dart
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart'; // ✅ Import Zaroori hai BlocBuilder ke liye
-import '../../domain/entities/task.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../bloc/task_bloc.dart';
 import '../bloc/task_event.dart';
 import '../bloc/task_state.dart';
@@ -14,10 +14,9 @@ class TaskSearchDelegate extends SearchDelegate {
   TaskSearchDelegate({
     required this.taskBloc,
     required this.userId,
-    // tasks list ki zaroorat nahi hai kyunki hum direct Bloc se fresh data lenge
   });
 
-  // 1. Right Side (Clear Button)
+  // Action buttons on the right of the search bar (e.g., Clear query)
   @override
   List<Widget>? buildActions(BuildContext context) {
     return [
@@ -31,7 +30,7 @@ class TaskSearchDelegate extends SearchDelegate {
     ];
   }
 
-  // 2. Left Side (Back Button)
+  // Leading icon on the left of the search bar (e.g., Back button)
   @override
   Widget? buildLeading(BuildContext context) {
     return IconButton(
@@ -42,33 +41,32 @@ class TaskSearchDelegate extends SearchDelegate {
     );
   }
 
-  // 3. Results View
+  // View shown when the user hits 'Enter' or 'Search'
   @override
   Widget buildResults(BuildContext context) {
     return _buildLiveList();
   }
 
-  // 4. Suggestions View
+  // View shown dynamically as the user types
   @override
   Widget buildSuggestions(BuildContext context) {
     return _buildLiveList();
   }
 
-  // --- Main List Logic (Updated with BlocBuilder) ---
+  // specialized method using BlocBuilder to ensure search results update 
+  // in real-time if a task is modified or deleted within the search view
   Widget _buildLiveList() {
-    // 🟢 BlocBuilder ka use kar rahe hain taaki UI update ho sake
     return BlocBuilder<TaskBloc, TaskState>(
-      bloc: taskBloc, // Jo bloc humne pass kiya wo use karein
+      bloc: taskBloc, 
       builder: (context, state) {
-        
-        // Fresh Data se filter karein
+        // Filter the current state based on the search query
         final filteredTasks = state.tasks.where((task) {
           final titleLower = task.title.toLowerCase();
           final queryLower = query.toLowerCase();
           return titleLower.contains(queryLower);
         }).toList();
 
-        // Agar koi result na mile
+        // Empty State
         if (filteredTasks.isEmpty) {
           return Center(
             child: Column(
@@ -89,7 +87,7 @@ class TaskSearchDelegate extends SearchDelegate {
           );
         }
 
-        // Live List View
+        // Search Results List
         return ListView.builder(
           padding: const EdgeInsets.all(16),
           itemCount: filteredTasks.length,
@@ -101,7 +99,7 @@ class TaskSearchDelegate extends SearchDelegate {
               child: TaskItem(
                 task: task,
                 
-                // Navigate to Edit
+                // Navigate to detail page on tap
                 onTap: () {
                   Navigator.push(
                     context,
@@ -114,12 +112,12 @@ class TaskSearchDelegate extends SearchDelegate {
                   );
                 },
 
-                // ✅ Complete Toggle (Ab ye UI update karega)
+                // Dispatch toggle event directly to the existing BLoC
                 onToggle: () {
                    taskBloc.add(TaskToggleCompletionRequested(task));
                 },
 
-                // Delete Task
+                // Dispatch delete event directly to the existing BLoC
                 onDelete: () {
                    taskBloc.add(TaskDeleteRequested(task.id));
                 },

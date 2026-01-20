@@ -4,6 +4,7 @@ import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_strings.dart';
 import '../../domain/entities/task.dart';
 
+// Reusable widget to display task priority with specific color coding
 class PriorityBadge extends StatelessWidget {
   final TaskPriority priority;
   final bool isSmall;
@@ -14,6 +15,7 @@ class PriorityBadge extends StatelessWidget {
     this.isSmall = false,
   });
 
+  // Maps priority level to specific theme colors
   Color get _color {
     switch (priority) {
       case TaskPriority.low:
@@ -25,6 +27,7 @@ class PriorityBadge extends StatelessWidget {
     }
   }
 
+  // Maps priority level to display text
   String get _label {
     switch (priority) {
       case TaskPriority.low:

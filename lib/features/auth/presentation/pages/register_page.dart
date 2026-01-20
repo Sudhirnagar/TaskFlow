@@ -1,7 +1,7 @@
+// lib/features/auth/presentation/pages/register_page.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-// Imports
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_strings.dart';
 import '../../../../core/utils/validators.dart';
@@ -47,10 +47,9 @@ class _RegisterPageState extends State<RegisterPage> {
     return Scaffold(
       backgroundColor: AppColors.background,
       body: BlocConsumer<AuthBloc, AuthState>(
-        // 🟢 Listener Logic (Same as Login Page)
+        // Handle navigation to dashboard on success or show error messages
         listener: (context, state) {
           if (state is AuthAuthenticated) {
-            // Success: Navigate to Home (TasksPage)
             Navigator.of(context).pushAndRemoveUntil(
               MaterialPageRoute(
                 builder: (_) => const TasksPage(),
@@ -58,7 +57,6 @@ class _RegisterPageState extends State<RegisterPage> {
               (route) => false,
             );
           } else if (state is AuthError) {
-            // Error: Show SnackBar
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(state.message),
@@ -77,7 +75,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   children: [
                     const SizedBox(height: 32),
                     
-                    // Logo Icon
+                    // App branding icon
                     Container(
                       width: 80,
                       height: 80,
@@ -100,7 +98,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     ),
                     const SizedBox(height: 32),
                     
-                    // Title
+                    // Page header
                     Text(
                       AppStrings.letsGetStarted,
                       style: Theme.of(context).textTheme.headlineSmall?.copyWith(
@@ -110,7 +108,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     ),
                     const SizedBox(height: 48),
 
-                    // Email Field
+                    // Email input section
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -145,7 +143,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     ),
                     const SizedBox(height: 24),
 
-                    // Password Field
+                    // Password input section
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -189,7 +187,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     ),
                     const SizedBox(height: 32),
 
-                    // Sign Up Button
+                    // Registration action button
                     SizedBox(
                       width: double.infinity,
                       height: 56,
@@ -222,7 +220,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     ),
                     const SizedBox(height: 32),
 
-                    // Social Login UI
+                    // Third-party authentication options
                     Text(
                       AppStrings.orSignUpWith,
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
@@ -251,7 +249,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     ),
                     const SizedBox(height: 32),
 
-                    // Navigate to Login Link
+                    // Navigation to Login page
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -290,7 +288,7 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 }
 
-// Social Button Widget (Shared UI)
+// Reusable widget for social media login buttons
 class _SocialButton extends StatelessWidget {
   final IconData icon;
   final Color color;

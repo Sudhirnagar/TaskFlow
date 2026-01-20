@@ -1,4 +1,3 @@
-
 // lib/features/tasks/presentation/widgets/task_item.dart
 import 'package:flutter/material.dart';
 import '../../../../core/constants/app_colors.dart';
@@ -6,6 +5,7 @@ import '../../../../core/utils/date_formatter.dart';
 import '../../domain/entities/task.dart';
 import 'priority_badge.dart';
 
+// Individual list item widget representing a single task with swipe actions
 class TaskItem extends StatelessWidget {
   final Task task;
   final VoidCallback onTap;
@@ -22,12 +22,28 @@ class TaskItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Determines if the task is past its due date and still active
     final isOverdue = task.dueDate.isBefore(DateTime.now()) && !task.isCompleted;
 
+    // Enables swipe-to-delete AND swipe-to-complete functionality
     return Dismissible(
       key: Key(task.id),
-      direction: DismissDirection.endToStart,
+      // Allow swiping in both directions
+      direction: DismissDirection.horizontal,
+      
+      // 🟢 Right Swipe (StartToEnd) -> Complete Action
       background: Container(
+        alignment: Alignment.centerLeft,
+        padding: const EdgeInsets.only(left: 20),
+        decoration: BoxDecoration(
+          color: Colors.green,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: const Icon(Icons.check_circle, color: Colors.white, size: 30),
+      ),
+
+      // 🔴 Left Swipe (EndToStart) -> Delete Action
+      secondaryBackground: Container(
         alignment: Alignment.centerRight,
         padding: const EdgeInsets.only(right: 16),
         decoration: BoxDecoration(
@@ -37,35 +53,72 @@ class TaskItem extends StatelessWidget {
         child: const Icon(
           Icons.delete,
           color: Colors.white,
+          size: 30,
         ),
       ),
+
+      // Confirmation Dialog Logic
       confirmDismiss: (direction) async {
-        return await showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: const Text('Delete Task'),
-              content: const Text('Are you sure you want to delete this task?'),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.of(context).pop(false),
-                  child: const Text('Cancel'),
-                ),
-                TextButton(
-                  onPressed: () => Navigator.of(context).pop(true),
-                  child: const Text(
-                    'Delete',
-                    style: TextStyle(color: AppColors.error),
+        if (direction == DismissDirection.startToEnd) {
+          // 🟢 SHOW COMPLETE DIALOG (Right Swipe)
+          return await showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: const Text('Complete Task'),
+                content: const Text('Are you sure you want to mark this task as completed?'),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.of(context).pop(false),
+                    child: const Text('Cancel', style: TextStyle(color: Colors.grey)),
                   ),
-                ),
-              ],
-            );
-          },
-        );
+                  TextButton(
+                    onPressed: () => Navigator.of(context).pop(true),
+                    child: const Text(
+                      'Complete',
+                      style: TextStyle(color: AppColors.primary, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ],
+              );
+            },
+          );
+        } else {
+          // 🔴 SHOW DELETE DIALOG (Left Swipe)
+          return await showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: const Text('Delete Task'),
+                content: const Text('Are you sure you want to delete this task?'),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.of(context).pop(false),
+                    child: const Text('Cancel'),
+                  ),
+                  TextButton(
+                    onPressed: () => Navigator.of(context).pop(true),
+                    child: const Text(
+                      'Delete',
+                      style: TextStyle(color: AppColors.error),
+                    ),
+                  ),
+                ],
+              );
+            },
+          );
+        }
       },
+
+      // Execute Action on Confirm
       onDismissed: (direction) {
-        onDelete?.call();
+        if (direction == DismissDirection.startToEnd) {
+          onToggle(); // Trigger Complete
+        } else {
+          onDelete?.call(); // Trigger Delete
+        }
       },
+
       child: GestureDetector(
         onTap: onTap,
         child: Container(
@@ -84,6 +137,7 @@ class TaskItem extends StatelessWidget {
           ),
           child: Row(
             children: [
+              // Circular Checkbox for task completion
               GestureDetector(
                 onTap: onToggle,
                 child: Container(
@@ -109,6 +163,8 @@ class TaskItem extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 12),
+              
+              // Task Details Column (Title, Desc, Metadata)
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -144,6 +200,8 @@ class TaskItem extends StatelessWidget {
                       ),
                     ],
                     const SizedBox(height: 8),
+                    
+                    // Metadata Row (Priority & Date)
                     Row(
                       children: [
                         PriorityBadge(

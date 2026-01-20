@@ -1,4 +1,3 @@
-
 // lib/features/auth/presentation/bloc/auth_bloc.dart
 import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -32,7 +31,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<AuthLoginRequested>(_onAuthLoginRequested);
     on<AuthLogoutRequested>(_onAuthLogoutRequested);
 
-    // Listen to auth state changes
+    // Establishes a real-time listener for authentication status changes from the repository
     _authStateSubscription = authRepository.authStateChanges.listen((user) {
       if (user != null) {
         // ignore: invalid_use_of_visible_for_testing_member
@@ -44,6 +43,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     });
   }
 
+  // Verifies if an active session exists upon app startup (Splash Screen logic)
   Future<void> _onAuthCheckRequested(
     AuthCheckRequested event,
     Emitter<AuthState> emit,
@@ -58,6 +58,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     );
   }
 
+  // Executes registration logic and updates state based on success or failure
   Future<void> _onAuthRegisterRequested(
     AuthRegisterRequested event,
     Emitter<AuthState> emit,
@@ -72,6 +73,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     );
   }
 
+  // Performs login operation and handles success (Authenticated) or failure (Error) states
   Future<void> _onAuthLoginRequested(
     AuthLoginRequested event,
     Emitter<AuthState> emit,
@@ -86,6 +88,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     );
   }
 
+  // Terminates the current session and resets state to Unauthenticated
   Future<void> _onAuthLogoutRequested(
     AuthLogoutRequested event,
     Emitter<AuthState> emit,
@@ -98,6 +101,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     );
   }
 
+  // Ensures the stream subscription is cancelled to prevent memory leaks
   @override
   Future<void> close() {
     _authStateSubscription?.cancel();

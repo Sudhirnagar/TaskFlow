@@ -10,6 +10,7 @@ import '../bloc/task_bloc.dart';
 import '../bloc/task_event.dart';
 import '../widgets/priority_badge.dart';
 
+// Screen for creating a new task or editing an existing one
 class TaskDetailPage extends StatefulWidget {
   final String userId;
   final Task? task;
@@ -31,11 +32,13 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
   late DateTime _selectedDate;
   late TaskPriority _selectedPriority;
 
+  // Helper to determine if we are in 'Edit' mode or 'Create' mode
   bool get _isEditing => widget.task != null;
 
   @override
   void initState() {
     super.initState();
+    // Initialize controllers with existing data if editing, or defaults if creating
     _titleController = TextEditingController(text: widget.task?.title ?? '');
     _descriptionController = TextEditingController(
       text: widget.task?.description ?? '',
@@ -51,6 +54,7 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
     super.dispose();
   }
 
+  // Opens the native date picker
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
@@ -77,6 +81,7 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
     }
   }
 
+  // Validates inputs and dispatches either Create or Update events
   void _saveTask() {
     if (_formKey.currentState!.validate()) {
       final now = DateTime.now();
@@ -109,6 +114,7 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
     }
   }
 
+  // Shows confirmation dialog before deleting an existing task
   void _deleteTask() {
     if (_isEditing) {
       showDialog(
@@ -175,7 +181,7 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Title
+              // Title Field
               Text(
                 AppStrings.taskTitle,
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
@@ -202,7 +208,7 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
               ),
               const SizedBox(height: 24),
 
-              // Description
+              // Description Field
               Text(
                 AppStrings.taskDescription,
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
@@ -228,7 +234,7 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
               ),
               const SizedBox(height: 24),
 
-              // Due Date
+              // Date Picker
               Text(
                 AppStrings.dueDate,
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
@@ -266,7 +272,7 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
               ),
               const SizedBox(height: 24),
 
-              // Priority
+              // Priority Selector
               Text(
                 AppStrings.priority,
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
@@ -317,7 +323,7 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
               ),
               const SizedBox(height: 32),
 
-              // Save Button
+              // Submit Button
               SizedBox(
                 width: double.infinity,
                 height: 56,
@@ -347,6 +353,7 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
   }
 }
 
+// Widget to render selectable priority cards
 class _PrioritySelector extends StatelessWidget {
   final TaskPriority priority;
   final bool isSelected;

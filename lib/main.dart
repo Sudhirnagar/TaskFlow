@@ -13,10 +13,10 @@ import 'injection_container.dart' as di;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   
-  // Initialize Firebase
+  // Initialize Firebase services before app startup
   await Firebase.initializeApp();
   
-  // Initialize dependency injection
+  // Initialize the Service Locator (Dependency Injection)
   await di.init();
   
   runApp(const MyApp());
@@ -27,6 +27,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Provides global access to BLoCs using the Service Locator
     return MultiBlocProvider(
       providers: [
         BlocProvider(
@@ -39,12 +40,16 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'TaskFlow',
         debugShowCheckedModeBanner: false,
+        
+        // App-wide Theme Configuration
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(seedColor: AppColors.primary),
           useMaterial3: true,
           textTheme: GoogleFonts.interTextTheme(),
           scaffoldBackgroundColor: AppColors.background,
         ),
+        
+        // Initial route directs to Splash Screen for auth checking
         home: const SplashPage(),
       ),
     );

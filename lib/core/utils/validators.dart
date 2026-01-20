@@ -1,5 +1,5 @@
-// lib/core/utils/validators.dart
 class Validators {
+  // Validates email format using a standard regex pattern
   static String? validateEmail(String? value) {
     if (value == null || value.isEmpty) {
       return 'Email is required';
@@ -16,6 +16,7 @@ class Validators {
     return null;
   }
   
+  // Enforces minimum password length requirements for security
   static String? validatePassword(String? value) {
     if (value == null || value.isEmpty) {
       return 'Password is required';
@@ -28,6 +29,7 @@ class Validators {
     return null;
   }
   
+  // Generic validator to ensure mandatory text fields are not empty
   static String? validateRequired(String? value, String fieldName) {
     if (value == null || value.isEmpty) {
       return '$fieldName is required';

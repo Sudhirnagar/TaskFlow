@@ -1,8 +1,8 @@
+// lib/features/auth/presentation/pages/login_page.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:task_manager/features/tasks/presentation/pages/tasks_page.dart';
 
-// Imports (Apne path ke hisaab se check kar lena)
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_strings.dart';
 import '../../../../core/utils/validators.dart';
@@ -10,10 +10,6 @@ import '../bloc/auth_bloc.dart';
 import '../bloc/auth_event.dart';
 import '../bloc/auth_state.dart';
 import 'register_page.dart';
-
-// ⚠️ IMPORTANT: Apne TaskPage (Home Page) ko yahan import karein
-// import '../../task/presentation/pages/task_page.dart';
-// Agar file nahi hai toh neeche maine dummy TaskPage banaya hai testing ke liye.
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -51,22 +47,18 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
       backgroundColor: AppColors.background,
       body: BlocConsumer<AuthBloc, AuthState>(
-        // 🟢 YAHAN CHANGE KIYA HAI: Listener mein Navigation Logic
+        // Handle side effects like navigation and snackbars
         listener: (context, state) {
-          // 1. Agar Login Success ho gaya
           if (state is AuthAuthenticated) {
-            // ⚠️ Check: 'AuthSuccess' ya 'AuthAuthenticated' (Jo bhi aapke auth_state.dart mein ho)
+            // Navigate to Dashboard on success, removing login from back stack
             Navigator.of(context).pushAndRemoveUntil(
               MaterialPageRoute(
-                // Yahan 'TaskPage' par bhej rahe hain
                 builder: (_) => const TasksPage(),
               ),
-              (route) => false, // Back button login par wapas nahi layega
+              (route) => false,
             );
-          }
-
-          // 2. Agar Error aaya
-          else if (state is AuthError) {
+          } else if (state is AuthError) {
+            // Show error message on failure
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(state.message),
@@ -84,7 +76,8 @@ class _LoginPageState extends State<LoginPage> {
                 child: Column(
                   children: [
                     const SizedBox(height: 32),
-                    // Logo Icon
+                    
+                    // App branding icon
                     Container(
                       width: 80,
                       height: 80,
@@ -116,7 +109,7 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     const SizedBox(height: 48),
 
-                    // Email Field
+                    // Email input section
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -152,7 +145,7 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     const SizedBox(height: 24),
 
-                    // Password Field
+                    // Password input section
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -214,7 +207,7 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     const SizedBox(height: 32),
 
-                    // Login Button
+                    // Main action button
                     SizedBox(
                       width: double.infinity,
                       height: 56,
@@ -247,7 +240,7 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     const SizedBox(height: 32),
 
-                    // Social Login UI
+                    // Third-party authentication options
                     Text(
                       AppStrings.orLogInWith,
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
@@ -276,7 +269,7 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     const SizedBox(height: 32),
 
-                    // Sign Up Link
+                    // Navigation to Sign Up page
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -316,6 +309,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 }
 
+// Reusable widget for social media login buttons
 class _SocialButton extends StatelessWidget {
   final IconData icon;
   final Color color;

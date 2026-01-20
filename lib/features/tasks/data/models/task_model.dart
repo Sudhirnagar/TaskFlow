@@ -2,6 +2,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../domain/entities/task.dart';
 
+// Data layer representation of the Task entity with Firestore serialization logic
 class TaskModel extends Task {
   const TaskModel({
     required super.id,
@@ -15,6 +16,7 @@ class TaskModel extends Task {
     required super.updatedAt,
   });
 
+  // Factory to parse a Firestore document snapshot into a strongly-typed model
   factory TaskModel.fromFirestore(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
     return TaskModel(
@@ -30,6 +32,7 @@ class TaskModel extends Task {
     );
   }
 
+  // Converts the model instance into a Map suitable for Firestore storage
   Map<String, dynamic> toFirestore() {
     return {
       'userId': userId,
@@ -43,6 +46,7 @@ class TaskModel extends Task {
     };
   }
 
+  // Helper methods to convert between Priority enum and String values
   static TaskPriority _priorityFromString(String priority) {
     switch (priority) {
       case 'low':

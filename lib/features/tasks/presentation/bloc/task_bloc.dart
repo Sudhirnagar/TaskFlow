@@ -36,11 +36,10 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
     on<TaskDeleteRequested>(_onTaskDeleteRequested);
     on<TaskToggleCompletionRequested>(_onTaskToggleCompletionRequested);
     on<TaskFilterChanged>(_onTaskFilterChanged);
-    
-    // ✅ Use Changed (Set), not Toggle
     on<TaskPriorityFilterChanged>(_onTaskPriorityFilterChanged);
   }
 
+  // Subscribes to the repository stream for real-time task updates
   Future<void> _onTaskLoadRequested(
     TaskLoadRequested event,
     Emitter<TaskState> emit,
@@ -55,7 +54,7 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
         final filteredTasks = _applyFilters(
           sortedTasks, 
           state.filter, 
-          state.priorityFilter // ✅ Use single filter
+          state.priorityFilter
         );
         
         return state.copyWith(
@@ -93,12 +92,13 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
     result.fold((failure) => emit(state.copyWith(errorMessage: failure.message)), (_) {});
   }
 
+  // Updates the status filter (All/Completed/Incomplete) and refreshes the list
   void _onTaskFilterChanged(TaskFilterChanged event, Emitter<TaskState> emit) {
     final filteredTasks = _applyFilters(state.tasks, event.filter, state.priorityFilter);
     emit(state.copyWith(filter: event.filter, filteredTasks: filteredTasks));
   }
 
-  // ✅ Simple Set Logic
+  // Updates the priority filter and refreshes the list
   void _onTaskPriorityFilterChanged(
     TaskPriorityFilterChanged event,
     Emitter<TaskState> emit,
@@ -112,16 +112,19 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
     emit(state.copyWith(
       priorityFilter: event.priority,
       filteredTasks: filteredTasks,
-      clearPriorityFilter: event.priority == null, // Clear if null passed
+      // Helper param to explicitly clear nullable field in copyWith
+      clearPriorityFilter: event.priority == null, 
     ));
   }
 
+  // Helper to sort tasks by due date
   List<Task> _sortTasks(List<Task> tasks) {
     final sortedTasks = List<Task>.from(tasks);
     sortedTasks.sort((a, b) => a.dueDate.compareTo(b.dueDate));
     return sortedTasks;
   }
 
+  // Helper to apply both status and priority filters to the raw task list
   List<Task> _applyFilters(
     List<Task> tasks,
     TaskFilter filter,
@@ -129,6 +132,7 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
   ) {
     var filtered = tasks;
 
+    // Apply Status Filter
     switch (filter) {
       case TaskFilter.completed:
         filtered = filtered.where((task) => task.isCompleted).toList();
@@ -140,6 +144,7 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
         break;
     }
 
+    // Apply Priority Filter
     if (priorityFilter != null) {
       filtered = filtered.where((task) => task.priority == priorityFilter).toList();
     }

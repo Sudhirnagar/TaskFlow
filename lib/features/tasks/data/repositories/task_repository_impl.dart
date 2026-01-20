@@ -7,6 +7,7 @@ import '../../domain/repositories/task_repository.dart';
 import '../datasources/task_remote_datasource.dart';
 import '../models/task_model.dart';
 
+// Bridge between the Domain layer (Interfaces) and Data layer (Data Sources)
 class TaskRepositoryImpl implements TaskRepository {
   final TaskRemoteDataSource remoteDataSource;
 
@@ -15,9 +16,11 @@ class TaskRepositoryImpl implements TaskRepository {
   @override
   Future<dartz.Either<Failure, List<Task>>> getTasks(String userId) async {
     try {
+      // Fetch tasks from remote source and return success
       final tasks = await remoteDataSource.getTasks(userId);
       return dartz.Right(tasks);
     } on ServerException catch (e) {
+      // Map server exceptions to domain failures
       return dartz.Left(ServerFailure(e.message));
     } catch (e) {
       return dartz.Left(ServerFailure('An  error occurred'));
@@ -27,6 +30,7 @@ class TaskRepositoryImpl implements TaskRepository {
   @override
   Future<dartz.Either<Failure, Task>> createTask(Task task) async {
     try {
+      // Convert domain entity to data model before sending to API
       final taskModel = TaskModel(
         id: '',
         userId: task.userId,
@@ -50,6 +54,7 @@ class TaskRepositoryImpl implements TaskRepository {
   @override
   Future<dartz.Either<Failure, Task>> updateTask(Task task) async {
     try {
+      // Convert domain entity to model and update in remote source
       final taskModel = TaskModel(
         id: task.id,
         userId: task.userId,
@@ -73,6 +78,7 @@ class TaskRepositoryImpl implements TaskRepository {
   @override
   Future<dartz.Either<Failure, void>> deleteTask(String taskId) async {
     try {
+      // Remove the task from the remote database
       await remoteDataSource.deleteTask(taskId);
       return const dartz.Right(null);
     } on ServerException catch (e) {
@@ -84,6 +90,7 @@ class TaskRepositoryImpl implements TaskRepository {
 
   @override
   Stream<List<Task>> watchTasks(String userId) {
+    // Expose real-time stream from the data source
     return remoteDataSource.watchTasks(userId);
   }
 }

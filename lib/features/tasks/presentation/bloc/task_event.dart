@@ -9,6 +9,7 @@ abstract class TaskEvent extends Equatable {
   List<Object?> get props => [];
 }
 
+// Triggered when the user logs in or the screen initializes to fetch tasks
 class TaskLoadRequested extends TaskEvent {
   final String userId;
   const TaskLoadRequested(this.userId);
@@ -16,6 +17,7 @@ class TaskLoadRequested extends TaskEvent {
   List<Object> get props => [userId];
 }
 
+// Triggered when the user submits a new task form
 class TaskCreateRequested extends TaskEvent {
   final Task task;
   const TaskCreateRequested(this.task);
@@ -23,6 +25,7 @@ class TaskCreateRequested extends TaskEvent {
   List<Object> get props => [task];
 }
 
+// Triggered when the user saves edits to an existing task
 class TaskUpdateRequested extends TaskEvent {
   final Task task;
   const TaskUpdateRequested(this.task);
@@ -30,6 +33,7 @@ class TaskUpdateRequested extends TaskEvent {
   List<Object> get props => [task];
 }
 
+// Triggered when the user confirms deletion of a task
 class TaskDeleteRequested extends TaskEvent {
   final String taskId;
   const TaskDeleteRequested(this.taskId);
@@ -37,6 +41,7 @@ class TaskDeleteRequested extends TaskEvent {
   List<Object> get props => [taskId];
 }
 
+// Triggered when the user taps the checkbox on a task tile
 class TaskToggleCompletionRequested extends TaskEvent {
   final Task task;
   const TaskToggleCompletionRequested(this.task);
@@ -44,6 +49,7 @@ class TaskToggleCompletionRequested extends TaskEvent {
   List<Object> get props => [task];
 }
 
+// Triggered when the user changes the main status tabs (All / Incomplete / Completed)
 class TaskFilterChanged extends TaskEvent {
   final TaskFilter filter;
   const TaskFilterChanged(this.filter);
@@ -51,7 +57,7 @@ class TaskFilterChanged extends TaskEvent {
   List<Object> get props => [filter];
 }
 
-// ✅ FIX: Single Priority Change Event (Nullable allow karein)
+// Triggered when the user filters by priority chips (Low / Medium / High), allows null to reset
 class TaskPriorityFilterChanged extends TaskEvent {
   final TaskPriority? priority; 
   const TaskPriorityFilterChanged(this.priority);

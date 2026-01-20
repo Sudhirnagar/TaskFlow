@@ -18,6 +18,8 @@ class OnboardingPage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Spacer(),
+
+              // App logo display with shadow styling
               Container(
                 width: 80,
                 height: 80,
@@ -39,6 +41,8 @@ class OnboardingPage extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 32),
+
+              // Main welcome headline
               Text(
                 AppStrings.getThingsDone,
                 style: Theme.of(context).textTheme.headlineMedium?.copyWith(
@@ -47,6 +51,8 @@ class OnboardingPage extends StatelessWidget {
                     ),
               ),
               const SizedBox(height: 16),
+
+              // Subtitle and description text
               Text(
                 AppStrings.startPlanning,
                 style: Theme.of(context).textTheme.bodyLarge?.copyWith(
@@ -55,6 +61,8 @@ class OnboardingPage extends StatelessWidget {
                     ),
               ),
               const SizedBox(height: 48),
+
+              // Navigation button to proceed to registration
               Container(
                 width: 80,
                 height: 80,

@@ -1,3 +1,4 @@
+// lib/features/tasks/presentation/pages/tasks_page.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -31,6 +32,7 @@ class _TasksPageState extends State<TasksPage> {
   @override
   void initState() {
     super.initState();
+    // Fetch tasks as soon as the dashboard loads
     final authState = context.read<AuthBloc>().state;
     if (authState is AuthAuthenticated) {
       context.read<TaskBloc>().add(TaskLoadRequested(authState.user.id));
@@ -71,6 +73,7 @@ class _TasksPageState extends State<TasksPage> {
 
   @override
   Widget build(BuildContext context) {
+    // Listen for logout events to redirect to Login Page
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
         if (state is! AuthAuthenticated && state is! AuthLoading) {
@@ -83,7 +86,7 @@ class _TasksPageState extends State<TasksPage> {
       child: Scaffold(
         backgroundColor: AppColors.background,
 
-        // FAB
+        // Centered FAB for adding new tasks
         floatingActionButton: Container(
           height: 65,
           width: 65,
@@ -117,7 +120,7 @@ class _TasksPageState extends State<TasksPage> {
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
 
-        // Bottom Bar
+        // Custom Bottom Navigation Bar
         bottomNavigationBar: BottomAppBar(
           shape: const CircularNotchedRectangle(),
           notchMargin: 10.0,
@@ -153,13 +156,13 @@ class _TasksPageState extends State<TasksPage> {
           ),
         ),
 
-        // Body Switcher
+        // Switch between Active Tasks and Completed Tasks views
         body: _selectedIndex == 0 ? _buildMyTasksView() : _buildCompletedView(),
       ),
     );
   }
 
-  // --- View 1: Active Tasks ---
+  // --- View 1: Active Tasks (Dashboard) ---
   Widget _buildMyTasksView() {
     return Column(
       children: [
@@ -173,7 +176,7 @@ class _TasksPageState extends State<TasksPage> {
 
               return Column(
                 children: [
-                  // Filters Row (Uses New Widget)
+                  // Horizontal Priority Filters
                   Padding(
                     padding: const EdgeInsets.fromLTRB(20, 20, 20, 10),
                     child: SingleChildScrollView(
@@ -201,7 +204,8 @@ class _TasksPageState extends State<TasksPage> {
                       ),
                     ),
                   ),
-                  // List (Uses New Section Widget)
+                  
+                  // Grouped Task List
                   Expanded(
                     child: taskState.isLoading
                         ? const Center(child: CircularProgressIndicator())
@@ -231,7 +235,7 @@ class _TasksPageState extends State<TasksPage> {
     );
   }
 
-  // --- View 2: Completed Tasks ---
+  // --- View 2: Completed Tasks History ---
   Widget _buildCompletedView() {
     return Column(
       children: [
@@ -251,7 +255,7 @@ class _TasksPageState extends State<TasksPage> {
                 itemCount: completedTasks.length,
                 itemBuilder: (context, index) {
                   final task = completedTasks[index];
-                  // Completed tasks can only be deleted or unchecked
+                  // Completed tasks can be deleted or unchecked
                   return Dismissible(
                     key: Key(task.id),
                     direction: DismissDirection.endToStart,
@@ -285,6 +289,7 @@ class _TasksPageState extends State<TasksPage> {
     );
   }
 
+  // Common Header with Search and Date
   Widget _buildHeader({required bool isCompletedPage}) {
     return Container(
       padding: const EdgeInsets.only(bottom: 24),
@@ -300,10 +305,10 @@ class _TasksPageState extends State<TasksPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Top Row
+              // Navigation and Search Bar Row
               Row(
                 children: [
-                  // 1. Grid Icon (Left)
+                  // App Icon / Dashboard Toggle
                   Container(
                     width: 40,
                     height: 40,
@@ -316,7 +321,7 @@ class _TasksPageState extends State<TasksPage> {
 
                   const SizedBox(width: 12),
 
-                  // 2. Search Bar (White Background, Gray Text)
+                  // Search Bar Trigger
                   Expanded(
                     child: GestureDetector(
                       onTap: () {
@@ -337,18 +342,18 @@ class _TasksPageState extends State<TasksPage> {
                         height: 45,
                         padding: const EdgeInsets.symmetric(horizontal: 12),
                         decoration: BoxDecoration(
-                          color: Colors.white, // ✅ Pure White Background
+                          color: Colors.white,
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: Row(
                           children: [
                             const Icon(Icons.search,
-                                color: Colors.grey, size: 22), // ✅ Gray Icon
+                                color: Colors.grey, size: 22),
                             const SizedBox(width: 8),
                             Text(
                               'Search tasks...',
                               style: TextStyle(
-                                color: Colors.grey.shade500, // ✅ Gray Text
+                                color: Colors.grey.shade500,
                                 fontSize: 15,
                                 fontWeight: FontWeight.w500,
                               ),
@@ -361,7 +366,7 @@ class _TasksPageState extends State<TasksPage> {
 
                   const SizedBox(width: 12),
 
-                  // 3. Logout Icon (Right)
+                  // Logout Button
                   Container(
                     width: 40,
                     height: 40,
@@ -380,6 +385,7 @@ class _TasksPageState extends State<TasksPage> {
 
               const SizedBox(height: 25),
 
+              // Date and Page Title
               Text(
                 'Today, ${DateFormat('d MMMM').format(DateTime.now())}',
                 style: const TextStyle(color: Colors.white70, fontSize: 14),
@@ -399,6 +405,7 @@ class _TasksPageState extends State<TasksPage> {
     );
   }
 
+  // Placeholder for empty lists
   Widget _buildEmptyState(String message) {
     return Center(
       child: Column(

@@ -1,8 +1,10 @@
 // lib/features/tasks/domain/entities/task.dart
 import 'package:equatable/equatable.dart';
 
+// Enum to define urgency levels for sorting and UI categorization
 enum TaskPriority { low, medium, high }
 
+// Core domain entity representing a user task with value equality
 class Task extends Equatable {
   final String id;
   final String userId;
@@ -26,6 +28,7 @@ class Task extends Equatable {
     required this.updatedAt,
   });
 
+  // Helper method to create a modified copy of the immutable Task instance
   Task copyWith({
     String? id,
     String? userId,
@@ -50,6 +53,7 @@ class Task extends Equatable {
     );
   }
 
+  // Properties used to determine if two Task instances are identical
   @override
   List<Object> get props => [
         id,
@@ -61,5 +65,5 @@ class Task extends Equatable {
         isCompleted,
         createdAt,
         updatedAt,
-  ];
+      ];
 }

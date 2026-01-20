@@ -1,4 +1,3 @@
-
 // lib/features/auth/presentation/pages/splash_page.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -20,20 +19,24 @@ class _SplashPageState extends State<SplashPage> {
   @override
   void initState() {
     super.initState();
+    // Triggers the initial authentication check when the app launches
     context.read<AuthBloc>().add(AuthCheckRequested());
   }
 
   @override
   Widget build(BuildContext context) {
+    // Listens for auth state changes to determine where to route the user
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
         if (state is AuthAuthenticated) {
+          // Navigate to the main dashboard if a valid session exists
           Navigator.of(context).pushReplacement(
             MaterialPageRoute(
               builder: (_) => const TasksPage(),
             ),
           );
         } else if (state is AuthUnauthenticated) {
+          // Redirect to the onboarding screen if no user is logged in
           Navigator.of(context).pushReplacement(
             MaterialPageRoute(
               builder: (_) => const OnboardingPage(),
@@ -47,6 +50,7 @@ class _SplashPageState extends State<SplashPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              // App branding logo
               Container(
                 width: 100,
                 height: 100,
@@ -61,6 +65,8 @@ class _SplashPageState extends State<SplashPage> {
                 ),
               ),
               const SizedBox(height: 24),
+              
+              // App Name
               const Text(
                 'TaskFlow',
                 style: TextStyle(
@@ -70,6 +76,8 @@ class _SplashPageState extends State<SplashPage> {
                 ),
               ),
               const SizedBox(height: 48),
+              
+              // Loading indicator showing background activity
               const CircularProgressIndicator(
                 color: Colors.white,
               ),

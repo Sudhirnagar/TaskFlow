@@ -2,6 +2,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../domain/entities/user.dart';
 
+// Data layer representation of the User entity with Firestore serialization logic
 class UserModel extends User {
   const UserModel({
     required super.id,
@@ -9,6 +10,7 @@ class UserModel extends User {
     required super.createdAt,
   });
 
+  // Factory to create a model directly from authentication results
   factory UserModel.fromFirebaseUser(
     String uid,
     String email,
@@ -21,6 +23,7 @@ class UserModel extends User {
     );
   }
 
+  // Factory to parse a Firestore document snapshot into a strongly-typed model
   factory UserModel.fromFirestore(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
     return UserModel(
@@ -30,6 +33,7 @@ class UserModel extends User {
     );
   }
 
+  // Converts the model instance into a Map suitable for Firestore storage
   Map<String, dynamic> toFirestore() {
     return {
       'email': email,

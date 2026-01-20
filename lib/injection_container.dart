@@ -2,7 +2,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:get_it/get_it.dart';
-
 import 'features/auth/data/datasources/auth_remote_datasource.dart';
 import 'features/auth/data/repositories/auth_repository_impl.dart';
 import 'features/auth/domain/repositories/auth_repository.dart';
@@ -21,10 +20,15 @@ import 'features/tasks/domain/usecases/toggle_task_completion.dart';
 import 'features/tasks/domain/usecases/update_task.dart';
 import 'features/tasks/presentation/bloc/task_bloc.dart';
 
+// Service Locator instance
 final sl = GetIt.instance;
 
+// Entry point to initialize all dependencies before the app starts
 Future<void> init() async {
-  // BLoCs
+  // ---------------------------------------------------------------------------
+  // BLoCs (Presentation Layer)
+  // Registered as Factories so a new instance is created for every usage/screen
+  // ---------------------------------------------------------------------------
   sl.registerFactory(
     () => AuthBloc(
       registerUser: sl(),
@@ -46,20 +50,23 @@ Future<void> init() async {
     ),
   );
 
-  // Use cases - Auth
+  // Use Cases (Domain Layer)
+  // Registered as Lazy Singletons (created only when first requested)
+  // Auth
   sl.registerLazySingleton(() => RegisterUser(sl()));
   sl.registerLazySingleton(() => LoginUser(sl()));
   sl.registerLazySingleton(() => LogoutUser(sl()));
   sl.registerLazySingleton(() => GetCurrentUser(sl()));
 
-  // Use cases - Tasks
+  // Tasks
   sl.registerLazySingleton(() => GetTasks(sl()));
   sl.registerLazySingleton(() => CreateTask(sl()));
   sl.registerLazySingleton(() => UpdateTask(sl()));
   sl.registerLazySingleton(() => DeleteTask(sl()));
   sl.registerLazySingleton(() => ToggleTaskCompletion(sl()));
 
-  // Repositories
+  // Repositories (Domain & Data Layer)
+  // Maps abstract interfaces to concrete implementations
   sl.registerLazySingleton<AuthRepository>(
     () => AuthRepositoryImpl(remoteDataSource: sl()),
   );
@@ -68,7 +75,8 @@ Future<void> init() async {
     () => TaskRepositoryImpl(remoteDataSource: sl()),
   );
 
-  // Data sources
+  // Data Sources (Data Layer)
+  // Handles direct communication with external APIs/Databases
   sl.registerLazySingleton<AuthRemoteDataSource>(
     () => AuthRemoteDataSourceImpl(
       firebaseAuth: sl(),
@@ -80,7 +88,8 @@ Future<void> init() async {
     () => TaskRemoteDataSourceImpl(firestore: sl()),
   );
 
-  // External dependencies
+  // External Dependencies
+  // Third-party libraries (Firebase, etc.)
   sl.registerLazySingleton(() => firebase_auth.FirebaseAuth.instance);
   sl.registerLazySingleton(() => FirebaseFirestore.instance);
 }
