@@ -347,37 +347,3 @@ tasks/
 ## 📄 License
 
 This project is created for educational purposes as part of a coding assessment.
-
-## 👨‍💻 Developer Notes
-
-### Code Quality
-- ✅ Clean Architecture implementation
-- ✅ SOLID principles followed
-- ✅ Proper error handling
-- ✅ Type-safe code
-- ✅ Commented complex logic
-- ✅ Consistent naming conventions
-
-### Performance
-- Real-time listeners for instant updates
-- Optimized widget rebuilds using BLoC
-- Efficient date filtering and sorting
-- Lazy loading of dependencies
-
-### Scalability
-- Easy to add new features
-- Modular architecture
-- Reusable widgets and utilities
-- Clear separation of concerns
-
-## 📞 Support
-
-For issues or questions, please create an issue in the repository or contact the development team.
-
----
-
-**Deadline**: January 21, 2026 EOD
-
-**Status**: ✅ Complete - Ready for submission
-
-**Note**: This app demonstrates proficiency in Flutter, Clean Architecture, BLoC pattern, Firebase integration, and modern mobile app development practices.
