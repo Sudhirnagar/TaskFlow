@@ -33,17 +33,22 @@ dependencies:
   google_fonts: ^6.1.0
   intl: ^0.18.1
 
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/icon/logo.png"
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^5.0.0
+  flutter_launcher_icons: ^0.14.4
 
 flutter:
   uses-material-design: true
 
-  # Assets (optional, add if needed)
-  # assets:
-  #   - assets/images/
+  assets:
+    - assets/icon/
 
   # Fonts (optional, add if needed)
   # fonts:
