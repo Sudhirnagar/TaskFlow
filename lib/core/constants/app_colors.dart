@@ -1,9 +1,14 @@
 // lib/core/constants/app_colors.dart
+
 import 'package:flutter/material.dart';
 
 class AppColors {
-  static const primary = Color(0xFF6C63FF);
-  static const primaryDark = Color(0xFF5A52E5);
+  // ✅ New Primary Color (#827afa)
+  static const primary = Color(0xFF827AFA);
+  
+  // Adjusted Dark variant (Thoda dark shade gradient effects ke liye)
+  static const primaryDark = Color(0xFF6C63FF); 
+
   static const background = Color(0xFFF5F6FA);
   static const cardBackground = Colors.white;
   static const textPrimary = Color(0xFF2D3748);

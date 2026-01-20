@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import '../widgets/task_search_delegate.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_strings.dart';
 import '../../../auth/presentation/bloc/auth_bloc.dart';
@@ -14,7 +15,6 @@ import '../bloc/task_state.dart';
 import '../widgets/task_item.dart';
 import 'task_detail_page.dart';
 
-// ✅ NEW WIDGETS IMPORT
 import '../widgets/priority_chip_widget.dart';
 import '../widgets/task_section_widget.dart';
 
@@ -300,9 +300,10 @@ class _TasksPageState extends State<TasksPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // Top Row
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
+                  // 1. Grid Icon (Left)
                   Container(
                     width: 40,
                     height: 40,
@@ -312,19 +313,73 @@ class _TasksPageState extends State<TasksPage> {
                     child: const Icon(Icons.grid_view_rounded,
                         color: Colors.white),
                   ),
-                  Row(
-                    children: [
-                      IconButton(
-                          onPressed: () {},
-                          icon: const Icon(Icons.search, color: Colors.white)),
-                      IconButton(
-                          onPressed: _showLogoutDialog,
-                          icon: const Icon(Icons.logout, color: Colors.white)),
-                    ],
+
+                  const SizedBox(width: 12),
+
+                  // 2. Search Bar (White Background, Gray Text)
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () {
+                        final taskBloc = context.read<TaskBloc>();
+                        final authBloc = context.read<AuthBloc>().state;
+
+                        if (authBloc is AuthAuthenticated) {
+                          showSearch(
+                            context: context,
+                            delegate: TaskSearchDelegate(
+                              taskBloc: taskBloc,
+                              userId: authBloc.user.id,
+                            ),
+                          );
+                        }
+                      },
+                      child: Container(
+                        height: 45,
+                        padding: const EdgeInsets.symmetric(horizontal: 12),
+                        decoration: BoxDecoration(
+                          color: Colors.white, // ✅ Pure White Background
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Row(
+                          children: [
+                            const Icon(Icons.search,
+                                color: Colors.grey, size: 22), // ✅ Gray Icon
+                            const SizedBox(width: 8),
+                            Text(
+                              'Search tasks...',
+                              style: TextStyle(
+                                color: Colors.grey.shade500, // ✅ Gray Text
+                                fontSize: 15,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(width: 12),
+
+                  // 3. Logout Icon (Right)
+                  Container(
+                    width: 40,
+                    height: 40,
+                    decoration: BoxDecoration(
+                        color: Colors.white24,
+                        borderRadius: BorderRadius.circular(10)),
+                    child: IconButton(
+                      padding: EdgeInsets.zero,
+                      onPressed: _showLogoutDialog,
+                      icon: const Icon(Icons.logout_rounded,
+                          color: Colors.white, size: 22),
+                    ),
                   ),
                 ],
               ),
-              const SizedBox(height: 20),
+
+              const SizedBox(height: 25),
+
               Text(
                 'Today, ${DateFormat('d MMMM').format(DateTime.now())}',
                 style: const TextStyle(color: Colors.white70, fontSize: 14),
