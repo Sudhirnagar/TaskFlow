@@ -1,6 +1,7 @@
 // lib/features/auth/presentation/pages/login_page.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:task_manager/features/auth/presentation/widgets/logo_widget.dart';
 import 'package:task_manager/features/tasks/presentation/pages/tasks_page.dart';
 
 import '../../../../core/constants/app_colors.dart';
@@ -75,30 +76,11 @@ class _LoginPageState extends State<LoginPage> {
                 key: _formKey,
                 child: Column(
                   children: [
-                    const SizedBox(height: 32),
+                    const SizedBox(height: 10),
                     
                     // App branding icon
-                    Container(
-                      width: 80,
-                      height: 80,
-                      decoration: BoxDecoration(
-                        color: AppColors.primary,
-                        borderRadius: BorderRadius.circular(20),
-                        boxShadow: [
-                          BoxShadow(
-                            color: AppColors.primary.withOpacity(0.3),
-                            blurRadius: 20,
-                            offset: const Offset(0, 10),
-                          ),
-                        ],
-                      ),
-                      child: const Icon(
-                        Icons.check,
-                        color: Colors.white,
-                        size: 40,
-                      ),
-                    ),
-                    const SizedBox(height: 32),
+                   LogoWidget(),
+                    const SizedBox(height: 25),
                     Text(
                       AppStrings.welcomeBack,
                       style:

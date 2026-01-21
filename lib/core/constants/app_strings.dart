@@ -3,7 +3,7 @@ class AppStrings {
   // General app information and onboarding screen messages
   static const appName = 'TaskFlow';
   static const getThingsDone = 'Get things done.';
-  static const startPlanning = 'Start today and start\nplanning your tasks';
+  static const startPlanning = 'Just a click away from\nplanning your tasks';
   static const letsGetStarted = "Let's get started!";
 
   // Authentication screens (Login/Signup) headers and form labels
