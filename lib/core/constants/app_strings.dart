@@ -1,4 +1,3 @@
-// lib/core/constants/app_strings.dart
 class AppStrings {
   // General app information and onboarding screen messages
   static const appName = 'TaskFlow';

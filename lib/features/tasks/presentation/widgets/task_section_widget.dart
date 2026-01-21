@@ -1,4 +1,3 @@
-// lib/features/tasks/presentation/widgets/task_section_widget.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/constants/app_colors.dart';

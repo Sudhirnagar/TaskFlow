@@ -1,4 +1,3 @@
-// lib/features/auth/domain/entities/user.dart
 import 'package:equatable/equatable.dart';
 
 // Core domain entity representing an authenticated user within the application

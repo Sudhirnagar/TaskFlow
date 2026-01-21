@@ -1,4 +1,3 @@
-// lib/features/tasks/domain/entities/task.dart
 import 'package:equatable/equatable.dart';
 
 // Enum to define urgency levels for sorting and UI categorization

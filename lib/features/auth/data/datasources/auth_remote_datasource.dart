@@ -1,4 +1,3 @@
-// lib/features/auth/data/datasources/auth_remote_datasource.dart
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../../../core/errors/exceptions.dart';

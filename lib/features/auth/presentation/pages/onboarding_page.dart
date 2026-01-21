@@ -1,4 +1,3 @@
-// lib/features/auth/presentation/pages/onboarding_page.dart
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:task_manager/features/auth/presentation/widgets/logo_widget.dart';
